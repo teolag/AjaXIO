@@ -9,7 +9,7 @@ switch($_GET['action']) {
 	header('Content-type: application/json');
 	echo json_encode($response);
 	break;
-	
+
 	case "savePersonReturnJSON":
 	$response = array(
 		"status" => "Saved",
@@ -18,12 +18,17 @@ switch($_GET['action']) {
 	header('Content-type: application/json');
 	echo json_encode($response);
 	break;
-	
+
 	case "getHTML":
 	$response = "<div><b>Hello</b> World!!</div>";
 	echo $response;
 	break;
 	
+	case "saveSettings":
+	$response = "Settings saved!<br>value:" . $_POST['value'] . "<br>type:" . $_POST['type'];
+	echo $response;
+	break;
+
 }
 
 

@@ -8,7 +8,7 @@ var Ajax = (function() {
 		settings.success = success;
 		custom(settings);
 	},
-	
+
 	post = function(url, data, success, settings) {
 		var settings = settings || {};
 		settings.type="POST";
@@ -20,41 +20,25 @@ var Ajax = (function() {
 		settings.responseType="json";
 		get(url, data, success, settings);
 	},
-	
+
 	post2JSON = function(url, data, success, settings) {
 		var settings = settings || {};
 		settings.responseType="json";
 		post(url, data, success, settings);
 	},
-	
-	
-	
-	postForm = function(url, data, success, errorCallback) {
-		console.warn("postForm is depricated, use 'post' instead");
-		var settings = {errorCallback: errorCallback}
-		post(url, data, success, settings);
-	},
-	postFormDataWithJsonResponse = function(url, data, success, errorCallback) {
-		console.warn("postFormDataWithJsonResponse is depricated, use 'post2JSON' instead");
-		var settings = {errorCallback: errorCallback}
-		post2JSON(url, data, success, settings);
-	},
-	
-	
-	
-		
+
 	custom = function(s) {
 		var url = s.url;
 		if(!s || !url) {
 			return error("no uri specified");
 		}
-		
+
 		var type = s.type? s.type.toUpperCase() : "GET";
 		if(type!=="GET" && type!=="POST") {
 			return error("invalid request type");
 		}
 		var async = s.async? s.async : true;
-		
+
 		var dataString="";
 		var formData;
 		if(s.data instanceof FormData) {
@@ -76,13 +60,18 @@ var Ajax = (function() {
 		} else {
 			return error("unknown data type:", typeof s.data);
 		}
-		
+
 		if(type==="GET" && dataString) {
 			url += "?" + dataString;
-		}
-		
+		} 
+
 		xhr = new XMLHttpRequest();
 		xhr.open(type, url, async);
+
+		if(type==="POST" && dataString) {
+			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+			formData = dataString;
+		}
 		
 		var parseAsJSON=false;
 		if(s.responseType=="json") {
@@ -91,7 +80,7 @@ var Ajax = (function() {
 				parseAsJSON=true;
 			}
 		}
-		
+
 		xhr.onload = function(e) {
 			var xhr = e.target;
 			if(e.target.status===200) {
@@ -117,28 +106,20 @@ var Ajax = (function() {
 				if(errorCallback) errorCallback(e.target);
 				return error("request failed", xhr);
 			}
-			
-			
 		};
-		
-		xhr.send(formData);	
-			
+		xhr.send(formData);
 	},
-	
+
 	error = function(m, xhr) {
 		console.error("AjaXIO error: " + m, xhr); return false;
 	};
-	
-		
 
 	return {
 		get: get,
+		post: post,
 		get2JSON: get2JSON,
 		getJSON: get2JSON,
-		post: post,
 		post2JSON: post2JSON,
-		postFormDataWithJsonResponse: postFormDataWithJsonResponse,
-		postForm: postForm,
 		custom: custom
 	};
 })();
