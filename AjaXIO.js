@@ -4,7 +4,7 @@ var Ajax = (function() {
 	get = function(url, data, success, settings) {
 		var settings = settings || {};
 		settings.url = url;
-		settings.data = data;
+		settings.data = data || null;
 		settings.success = success;
 		custom(settings);
 	},
@@ -57,6 +57,8 @@ var Ajax = (function() {
 			dataString = parts.join("&");
 		} else if(typeof s.data === "string") {
 			dataString = s.data;
+		} else if(s.data === null) {
+			dataString = null;
 		} else {
 			return error("unknown data type:", typeof s.data);
 		}
