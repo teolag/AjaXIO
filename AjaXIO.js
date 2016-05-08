@@ -65,7 +65,7 @@ var Ajax = (function() {
 
 		if(type==="GET" && dataString) {
 			url += "?" + dataString;
-		} 
+		}
 
 		xhr = new XMLHttpRequest();
 		xhr.open(type, url, async);
@@ -74,7 +74,7 @@ var Ajax = (function() {
 			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 			formData = dataString;
 		}
-		
+
 		var parseAsJSON=false;
 		if(s.responseType=="json") {
 			xhr.responseType = "json";
@@ -105,8 +105,8 @@ var Ajax = (function() {
 					}
 				}
 			} else {
-				if(errorCallback) errorCallback(e.target);
-				return error("request failed", xhr);
+				if(s.errorCallback) s.errorCallback(e.target);
+				else error("request failed", xhr);
 			}
 		};
 		xhr.send(formData);
